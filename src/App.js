@@ -12,12 +12,9 @@ function App() {
   return (
     <div className="App">
       <Song currentSong  ={currentSong} />
-      <Player 
-              setIsPlaying = {setIsPlaying}
-              isPlaying = {isPlaying}
-              setcurrentSong ={currentSong} 
-              />
+      <Player setIsPlaying = {setIsPlaying} isPlaying = {isPlaying} setcurrentSong ={currentSong} />
     </div>
+    
   );
 }
 
