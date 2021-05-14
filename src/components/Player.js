@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faAngleLeft, faAngleRight, faPause, } from "@fortawesome/free-solid-svg-icons";
+import {playAudio} from '../util'
 const Player = ({ currentSong, isPlaying, setIsPlaying, audioRef, setSongInfo, songInfo, songs, setCurrentSong, setSongs}) => {
 
-    useEffect(() => {     const newSongs = songs.map((song) => {
+    useEffect(() => { const newSongs = songs.map((song) => {
         if(song.id === currentSong.id){
             return{
                 ...song,
@@ -49,22 +50,40 @@ const Player = ({ currentSong, isPlaying, setIsPlaying, audioRef, setSongInfo, s
         if(direction === "skip-back"){
             if((currentIndex - 1 % songs.length === -1)){
                 setCurrentSong(songs[songs.length -1]);
+                playAudio(isPlaying, audioRef);
                 return;
             }
                 setCurrentSong(songs[(currentIndex - 1 ) % songs.length]);
         }
+        playAudio(isPlaying, audioRef);
+
    };
+
+   const trackAnim = {
+       transform :`translateX(${songInfo.animationPercentage}%)`
+   }
     return(
         <div className="player">
             <div className="time-control">
                 <p>{getTime(songInfo.currentTime)}</p>
+                <div style= {{background: `linear-gradient(to right, ${currentSong.color[0]},${currentSong.color[1]})`,
+                }}
+                className="track">
+            
                 <input 
                 min= {0} 
                 max={songInfo.duration || 0 } 
                 value={songInfo.currentTime} 
                 onChange = {dragHandler} 
-                type="range" />
-                <p>{getTime(songInfo.duration)}</p>
+                type="range" 
+                
+                />
+                
+
+                <div style={trackAnim} className="animate-track"></div>
+                </div>
+                {/* says 0:00 when you skip to next song  */}
+                <p>{songInfo.duration ? getTime(songInfo.duration) : "0:00"}</p>
             </div>
             <div className="play-control">
                 <FontAwesomeIcon onClick={() => skipTrackHandler('skip-back')} 
